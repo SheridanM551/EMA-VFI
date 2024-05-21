@@ -34,10 +34,10 @@ def train(model, local_rank, batch_size, data_path):
     best = 0
     dataset = VimeoDataset('train', data_path)
     sampler = DistributedSampler(dataset)
-    train_data = DataLoader(dataset, batch_size=batch_size, num_workers=8, pin_memory=True, drop_last=True, sampler=sampler)
+    train_data = DataLoader(dataset, batch_size=batch_size, num_workers=4, pin_memory=True, drop_last=True, sampler=sampler)
     args.step_per_epoch = train_data.__len__()
     dataset_val = VimeoDataset('test', data_path)
-    val_data = DataLoader(dataset_val, batch_size=batch_size, pin_memory=True, num_workers=8)
+    val_data = DataLoader(dataset_val, batch_size=batch_size, pin_memory=True, num_workers=4)
     print('training...')
     time_stamp = time.time()
     for epoch in range(300):
