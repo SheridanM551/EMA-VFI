@@ -81,6 +81,19 @@ def evaluate(model, val_data, nr_eval, local_rank):
     if local_rank == 0:
         print(str(nr_eval), psnr)
         writer_val.add_scalar('psnr', psnr, nr_eval)
+
+def load_checkpoint(model, optimizer, checkpoint_path):
+    if os.path.exists(checkpoint_path):
+        checkpoint = torch.load(checkpoint_path, map_location=device)
+        model.load_state_dict(checkpoint['model_state_dict'])
+        optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+        epoch = checkpoint['epoch']
+        step = checkpoint['step']
+        print(f"Checkpoint loaded: epoch {epoch}, step {step}")
+        return epoch, step
+    else:
+        print("No checkpoint found at '{}'".format(checkpoint_path))
+        return 0, 0
         
 if __name__ == "__main__":    
     parser = argparse.ArgumentParser()
@@ -89,17 +102,25 @@ if __name__ == "__main__":
     parser.add_argument('--world_size', default=4, type=int, help='world size')
     parser.add_argument('--batch_size', default=8, type=int, help='batch size')
     parser.add_argument('--data_path', type=str, help='data path of vimeo90k')
+    parser.add_argument('--checkpoint_path', type=str, default='ckpt/ours.pkl', help='path to checkpoint file')
     args = parser.parse_args()
+    
     torch.distributed.init_process_group(backend="nccl", world_size=args.world_size)
     torch.cuda.set_device(local_rank)
+    
     if local_rank == 0 and not os.path.exists('log'):
         os.mkdir('log')
+    
     seed = 1234
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.benchmark = True
+    
     model = Model(local_rank)
+    optimizer = torch.optim.Adam(model.parameters(), lr=2e-4)
+    
+    start_epoch, step = load_checkpoint(model, optimizer, args.checkpoint_path)
+    
     train(model, local_rank, args.batch_size, args.data_path)
-        
