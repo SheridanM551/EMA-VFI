@@ -15,10 +15,10 @@ class VimeoDataset(Dataset):
         self.model = model
         self.h = 256
         self.w = 448
-        self.data_root = path
-        self.image_root = os.path.join(self.data_root, 'sequences')
-        train_fn = os.path.join(self.data_root, 'tri_trainlist.txt')
-        test_fn = os.path.join(self.data_root, 'tri_testlist.txt')
+        
+        self.image_root = path
+        train_fn = "/kaggle/input/vimeo90k-dataset/high_res_train_structure.txt"
+        test_fn = "/kaggle/input/vimeo90k-dataset/high_res_train_structure.txt" # using same set but training: im1~im3, testing: im5~im7 
         with open(train_fn, 'r') as f:
             self.trainlist = f.read().splitlines()
         with open(test_fn, 'r') as f:
@@ -43,17 +43,20 @@ class VimeoDataset(Dataset):
         gt = gt[x:x+h, y:y+w, :]
         return img0, gt, img1
 
-    def getimg(self, index):
+    def getimg(self, index, name):
         imgpath = os.path.join(self.image_root, self.meta_data[index])
-        imgpaths = [imgpath + '/im1.png', imgpath + '/im2.png', imgpath + '/im3.png']
-        
+        if name == 'train':
+            imgpaths = [imgpath + '/im1.png', imgpath + '/im2.png', imgpath + '/im3.png']
+        else:
+            imgpaths = [imgpath + '/im5.png', imgpath + '/im6.png', imgpath + '/im7.png']
+            
         img0 = cv2.imread(imgpaths[0])
         gt = cv2.imread(imgpaths[1])
         img1 = cv2.imread(imgpaths[2])
         return img0, gt, img1
             
     def __getitem__(self, index):        
-        img0, gt, img1 = self.getimg(index)
+        img0, gt, img1 = self.getimg(index, self.dataset_name)
                 
         if 'train' in self.dataset_name:
             img0, gt, img1 = self.aug(img0, gt, img1, 256, 256)
