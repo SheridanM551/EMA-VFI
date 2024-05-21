@@ -26,7 +26,7 @@ def get_learning_rate(step):
         mul = np.cos((step - 2000) / (300 * args.step_per_epoch - 2000) * math.pi) * 0.5 + 0.5
         return (2e-4 - 2e-5) * mul + 2e-5
 
-def train(model, local_rank, batch_size, data_path, start_epoch):
+def train(model, local_rank, batch_size, data_path):
     if local_rank == 0:
         writer = SummaryWriter('log/train_EMAVFI')
     step = 0
@@ -42,7 +42,7 @@ def train(model, local_rank, batch_size, data_path, start_epoch):
     time_stamp = time.time()
     for epoch in range(300):
         sampler.set_epoch(epoch)
-        for i, imgs in enumerate(start_epoch, train_data):
+        for i, imgs in enumerate(train_data):
             data_time_interval = time.time() - time_stamp
             time_stamp = time.time()
             imgs = imgs.to(device, non_blocking=True) / 255.
@@ -103,16 +103,8 @@ if __name__ == "__main__":
     model = Model(local_rank)
 
     # 加载checkpoint
-    checkpoint_path = 'ckpt/ours.pkl'
-    if os.path.exists(checkpoint_path):
-        checkpoint = torch.load(checkpoint_path, map_location=device)
-        model.load_state_dict(checkpoint['model_state_dict'])
-        start_epoch = checkpoint['epoch']
-        step = checkpoint['step']
-        print(f"Checkpoint loaded: start_epoch = {start_epoch}, step = {step}")
-    else:
-        start_epoch = 0
-        step = 0
-        print("No checkpoint found, starting training from scratch.")
+    if os.path.exists('ckpt/ours.pkl'):
+        model.load_model('ours', local_rank)
+        print(f'Checkpoint "ours.pkl" loaded successfully on rank {local_rank}.')
 
-    train(model, local_rank, args.batch_size, args.data_path, start_epoch)
+    train(model, local_rank, args.batch_size, args.data_path)
