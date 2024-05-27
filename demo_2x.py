@@ -10,7 +10,7 @@ from imageio import mimsave
 sys.path.append('.')
 import config as cfg
 from Trainer import Model
-from benchmark.utils.padder import InputPadder
+from .benchmark.utils.padder import InputPadder
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--model', default='ours', type=str)
