@@ -78,7 +78,7 @@ for first_level in os.listdir(args.path):
             second_level_path = os.path.join(first_level_path, second_level)
             if os.path.isdir(second_level_path):
 
-                r2 = os.path.join(res_path, second_level)
+                r2 = os.path.join(r1, second_level)
                 print(f"making: {r2}")
                 os.makedirs(r2, exist_ok=True)
 
