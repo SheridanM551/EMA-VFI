@@ -64,9 +64,7 @@ model.device()
 print(f'=========================Start Generating=========================')
 
 # result folder
-res_path = './result'
-if not os.path.exists(res_path):
-    open(res_path, 'w').close()
+res_path = '/kaggle/working/result'
 
 total=0
 for first_level in os.listdir(args.path):
