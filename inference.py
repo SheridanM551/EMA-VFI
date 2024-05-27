@@ -83,8 +83,8 @@ for first_level in os.listdir(args.path):
                 # 輸出目錄結構
                 print(f"{first_level}/{second_level}")
                 total += 1
-                I0 = cv2.imread(os.path.join(second_level_path, 'img3.jpg'))
-                I2 = cv2.imread(os.path.join(second_level_path, 'img5.jpg'))
+                I0 = cv2.imread(os.path.join(second_level_path, 'im3.jpg'))
+                I2 = cv2.imread(os.path.join(second_level_path, 'im5.jpg'))
 
                 if args.scaleup:
                     I0 = cv2.resize(I0, (448, 256), interpolation=cv2.INTER_LINEAR)
@@ -100,6 +100,6 @@ for first_level in os.listdir(args.path):
 
                 I1 = (padder.unpad(model.inference(I0_, I2_, TTA=TTA, fast_TTA=TTA))[0].detach().cpu().numpy().transpose(1, 2, 0) * 255.0).astype(np.uint8)
 
-                cv2.imwrite(os.path.join(r2, 'img4.png'), I1)
+                cv2.imwrite(os.path.join(r2, 'im4.png'), I1)
 
 print(f'=========================Done=========================')
