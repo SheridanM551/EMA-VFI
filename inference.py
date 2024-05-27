@@ -65,7 +65,7 @@ print(f'=========================Start Generating=========================')
 
 # result folder
 res_path = './result'
-if not os.path.exists(log_path):
+if not os.path.exists(res_path):
     open(res_path, 'w').close()
 
 total=0
