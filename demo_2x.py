@@ -9,7 +9,8 @@ from imageio import mimsave
 
 '''==========import from our code=========='''
 # sys.path.append('.')
-sys.path.append("/kaggle/working/tmp")
+# sys.path.append("/kaggle/working/tmp")
+os.chdir('/kaggle/working/tmp')
 import config as cfg
 from Trainer import Model
 from benchmark.utils.padder import InputPadder
