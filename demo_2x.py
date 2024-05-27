@@ -8,6 +8,7 @@ from imageio import mimsave
 
 '''==========import from our code=========='''
 # sys.path.append('.')
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import config as cfg
 from Trainer import Model
 from benchmark.utils.padder import InputPadder
