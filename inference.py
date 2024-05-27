@@ -79,11 +79,9 @@ for first_level in os.listdir(args.path):
             if os.path.isdir(second_level_path):
 
                 r2 = os.path.join(r1, second_level)
-                print(f"making: {r2}")
                 os.makedirs(r2, exist_ok=True)
 
                 # 輸出目錄結構
-                # print(f"{first_level}/{second_level}")
                 total += 1
                 I0 = cv2.imread(os.path.join(second_level_path, 'im3.png'))
                 I2 = cv2.imread(os.path.join(second_level_path, 'im5.png'))
@@ -103,5 +101,6 @@ for first_level in os.listdir(args.path):
                 I1 = (padder.unpad(model.inference(I0_, I2_, TTA=TTA, fast_TTA=TTA))[0].detach().cpu().numpy().transpose(1, 2, 0) * 255.0).astype(np.uint8)
 
                 cv2.imwrite(os.path.join(r2, 'im4.png'), I1)
+                print(f"result/{first_level}/{second_level}/im4.png saved.")
 print(f'total processed: {total} images')
 print(f'=========================Done=========================')
