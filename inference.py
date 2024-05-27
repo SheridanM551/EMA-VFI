@@ -65,7 +65,8 @@ print(f'=========================Start Generating=========================')
 
 # result folder
 res_path = '/kaggle/working/result'
-
+if args.scaleup:
+    print("INFO: auto scale up.")
 total=0
 for first_level in os.listdir(args.path):
     first_level_path = os.path.join(args.path, first_level)
@@ -90,7 +91,7 @@ for first_level in os.listdir(args.path):
                     I0 = cv2.resize(I0, (448, 256), interpolation=cv2.INTER_LINEAR)
                     I2 = cv2.resize(I2, (448, 256), interpolation=cv2.INTER_LINEAR)
                 
-                assert I0.shape[:2] == (448, 256), "ERROR: input should be 448x256"
+                assert I0.shape[:2] == (256, 448), "ERROR: input should be 448x256"
 
                 I0_ = (torch.tensor(I0.transpose(2, 0, 1)).cuda() / 255.).unsqueeze(0)
                 I2_ = (torch.tensor(I2.transpose(2, 0, 1)).cuda() / 255.).unsqueeze(0)
