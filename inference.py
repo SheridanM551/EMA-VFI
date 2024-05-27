@@ -83,8 +83,8 @@ for first_level in os.listdir(args.path):
                 # 輸出目錄結構
                 print(f"{first_level}/{second_level}")
                 total += 1
-                I0 = cv2.imread(os.path.join(second_level_path, 'im3.jpg'))
-                I2 = cv2.imread(os.path.join(second_level_path, 'im5.jpg'))
+                I0 = cv2.imread(os.path.join(second_level_path, 'im3.png'))
+                I2 = cv2.imread(os.path.join(second_level_path, 'im5.png'))
 
                 if args.scaleup:
                     I0 = cv2.resize(I0, (448, 256), interpolation=cv2.INTER_LINEAR)
