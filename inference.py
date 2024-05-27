@@ -73,8 +73,6 @@ for first_level in os.listdir(args.path):
     first_level_path = os.path.join(args.path, first_level)
     if os.path.isdir(first_level_path):
         r1 = os.path.join(res_path, first_level)
-        if not os.path.exists(r1):
-            open(r1, 'w').close()
 
         # 遍歷給定目錄的第二層
         for second_level in os.listdir(first_level_path):
@@ -82,8 +80,7 @@ for first_level in os.listdir(args.path):
             if os.path.isdir(second_level_path):
 
                 r2 = os.path.join(res_path, second_level)
-                if not os.path.exists(r2):
-                    open(r2, 'w').close()
+                os.makedirs(r2, exist_ok=True)
 
                 # 輸出目錄結構
                 print(f"{first_level}/{second_level}")
